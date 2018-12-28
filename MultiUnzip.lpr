@@ -6,7 +6,7 @@ uses
   Classes, SysUtils, zipper, CustApp, SplitFile;
 const VERSION = '0.0';
 var
-  OurZipper: TZipper;
+  UnZipper: TUnZipper;
 type
 
   { TMyApplication }
@@ -51,12 +51,12 @@ begin
 end;
 procedure TMyApplication.DoRun;
 const
-  SHORT_OPTS = 'ho:s:';
-  LONG_OPTS : array [1..3] of string = ('help', 'output:', 'size');
+  SHORT_OPTS = 'hf:';
+  LONG_OPTS : array [1..2] of string = ('help','folder');
 var
-  ErrorMsg, str, strSize: String;
+  ErrorMsg, str, strSize, inFile: String;
   i: Integer;
-  outFile, baseName: RawByteString;
+  outFolder, baseName: RawByteString;
   strm: TMemoryStream;
   partSize: Longint;
 begin
@@ -74,7 +74,6 @@ begin
     Terminate;
     Exit;
   end;
-
   // Check file name
   GetNonOptions(SHORT_OPTS, LONG_OPTS, listPars);
   if listPars.Count = 0 then begin
@@ -92,70 +91,53 @@ begin
       Terminate;
       Exit;
     end;
-  end else begin
-    // Several file names
-    //Obtain list of input files
-    listFiles.Clear;
-    for i := 0 to listPars.Count -1 do begin
-      ExpandFileName(listPars[i], listFiles);
-      writeln('Extra Param ' + inttostr(i) + ' is ' + listPars[i]);
-    end;
-    if listFiles.Count = 0 then begin
-      writeln('No input files found: ' + listPars[0]);
+    if listFiles.Count > 1 then begin
+      writeln('No multiple files allowed.');
       Terminate;
       Exit;
     end;
-  end;
-  //Obtain name of output file
-  if HasOption('o', 'output') or (ParamCount = 0) then begin
-    //A name has been specified
-    outFile := GetOptionValue('o', 'output');
   end else begin
-    //We should choose a name
-    if listFiles.Count = 1 then begin
-      //It's just one file
-      outFile := ChangeFileExt(listPars[0], '.zip');
-    end else begin
-      outFile := ChangeFileExt(listFiles[0], '.zip');  //Take the first name
-    end;
+    // Several file names
+    writeln('No multiple files allowed.');
+    Terminate;
+    exit;
   end;
-  //Compress files
-  OurZipper := TZipper.Create;
-  try
-    OurZipper.FileName := outFile;
-    for str in listFiles do
-      OurZipper.Entries.AddFileEntry(str, str);
-    if HasOption('s', 'size') then begin
-      //Compress and split
-      strSize := GetOptionValue('s', 'size');
-      if not TryStrToInt(strSize, partSize) then begin
-        writeln('Bad file size: ' + strSize);
-        Terminate;
-        Exit;
-      end;
-      //Uisng stream
-      strm := TMemoryStream.Create;
-      OurZipper.SaveToStream(strm);
-      baseName := ExtractFileName(outFile);
-      baseName := ChangeFileExt(baseName, '');
-      DoSplitFile(strm, baseName, partSize * 1024);
-      strm.Destroy;
-      //Using a file
-      //OurZipper.SaveToFile(outFile);
-      //DoSplitFile(outFile, partSize*1024);
-    end else begin
-      //Just compress
-      OurZipper.SaveToFile(outFile);
-      //OurZipper.ZipAllFiles;
-    end;
-  finally
-    OurZipper.Free;
-  end;
-  if listFiles.Count = 1 then begin
-    writeln('1 file compressed.');
+  inFile := listFiles[0];  //name of output file
+  //Get folder output
+  if HasOption('f', 'folder') then begin
+    //A folder has been specified
+    outFolder := GetOptionValue('f', 'folder');
   end else begin
-    writeln(listFiles.Count, ' files compressed.');
+    //Default folder
+    outFolder := ExtractFilePath(inFile);
   end;
+  // Process file
+  if ExtractFileExt(inFile) = '.zip' then begin
+    //Must be extracted
+    UnZipper := TUnZipper.Create;
+    try
+      UnZipper.FileName := inFile;
+      UnZipper.OutputPath := '';
+      UnZipper.Examine;
+      UnZipper.UnZipAllFiles;
+    finally
+      UnZipper.Free;
+    end;
+  end else if ExtractFileExt(inFile) = '.part' then begin
+    //Must be joined
+
+  end else begin
+    //Unknown file
+    writeln('Unknown file type.');
+    Terminate;
+    exit;
+  end;
+
+//  if listFiles.Count = 1 then begin
+//    writeln('1 file compressed.');
+//  end else begin
+//    writeln(listFiles.Count, ' files compressed.');
+//  end;
   // stop program loop
   Terminate;
 end;
@@ -193,8 +175,9 @@ begin
   writeln('');
   writeln('-h or --help');
   writeln('  Print help information.');
-  writeln('-o <file name> or --output=<filename>');
-  writeln('  Set output file name. If not specified, a default name will be used.');
+  writeln('-f <folder name> or --folder=<fodler name>');
+  writeln('  Set output folder where extract compressed files. If not specified, it.');
+  writeln('  will be used the same folder of the compressed file.');
   writeln('');
   writeln('Example1: Uncompress the file this.zip to this.zip');
   writeln('  ' + filName + ' this.zip' );

@@ -84,7 +84,7 @@
     <RunParams>
       <local>
         <FormatVersion Value="1"/>
-        <CommandLineParams Value="aaa.zip"/>
+        <CommandLineParams Value="aaa.0.part"/>
       </local>
     </RunParams>
     <Units Count="2">

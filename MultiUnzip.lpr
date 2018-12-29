@@ -12,8 +12,6 @@ type
   { TMyApplication }
 
   TMyApplication = class(TCustomApplication)
-  private
-    procedure ExpandFileName(fileName: string; lstOfFiles: TStringList);
   protected
     listFiles: TSTringList;
     listPars: TStringList;
@@ -23,38 +21,12 @@ type
     destructor Destroy; override;
     procedure WriteHelp; virtual;
   end;
-procedure TMyApplication.ExpandFileName(fileName: string; lstOfFiles: TStringList);
-{Expand the fileName to a list of files (in "lstOfFiles") considering the wildcard
-chars: "?" or "*". The list of files will be added to "lstOfFiles", without a previous
-clearing.}
-var
-  Info: TSearchRec;
-begin
-  if fileName = '' then exit;
-  //There are some name
-  if (pos('*', fileName) = 0) and (pos('?', fileName) = 0) then begin
-    //It's just a file name.
-    lstOfFiles.Add(fileName);  //No check for existence.
-    exit;
-  end;
-  //There are some wildcard chars.
-  if FindFirst(fileName, faAnyFile and faDirectory, Info)=0 then begin
-    Repeat
-      if (Info.Attr and faDirectory) = faDirectory then begin
-        //Could be "." or ".."
-      end else begin
-        lstOfFiles.Add(Info.Name);
-      end;
-    until FindNext(info)<>0;
-  end;
-  FindClose(Info);
-end;
 procedure TMyApplication.DoRun;
 const
   SHORT_OPTS = 'hf:';
   LONG_OPTS : array [1..2] of string = ('help','folder');
 var
-  ErrorMsg, str, strSize, inFile: String;
+  ErrorMsg, str, strSize, inFile, extFile: String;
   i: Integer;
   outFolder, baseName: RawByteString;
   strm: TMemoryStream;
@@ -112,19 +84,21 @@ begin
     outFolder := ExtractFilePath(inFile);
   end;
   // Process file
-  if ExtractFileExt(inFile) = '.zip' then begin
+  extFile := UpCase(ExtractFileExt(inFile));
+  if extFile = '.ZIP' then begin
     //Must be extracted
     UnZipper := TUnZipper.Create;
     try
       UnZipper.FileName := inFile;
-      UnZipper.OutputPath := '';
+      UnZipper.OutputPath := outFolder;
       UnZipper.Examine;
       UnZipper.UnZipAllFiles;
     finally
       UnZipper.Free;
     end;
-  end else if ExtractFileExt(inFile) = '.part' then begin
+  end else if UpCase(ExtractFileExt(inFile)) = '.PART' then begin
     //Must be joined
+    DoJoinFiles(inFile);
 
   end else begin
     //Unknown file

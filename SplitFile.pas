@@ -8,13 +8,43 @@ type
     id: word;
     nblock : byte;
     nblocks: byte;
-    filsize: DWord;
+    filsize: DWord;  //Just informative
+    blksize: DWord;
   end;
+  THeaderPtr = ^Theader;
 
+procedure ExpandFileName(fileName: string; lstOfFiles: TStringList);
 function DoSplitFile(sourceFile: string; partSize: integer): string;
 function DoSplitFile(sourceStrm: TStream; baseName: string; partSize: integer): string;
+function DoJoinFiles(partFile: string): string;
 
 implementation
+procedure ExpandFileName(fileName: string; lstOfFiles: TStringList);
+{Expand the fileName to a list of files (in "lstOfFiles") considering the wildcard
+chars: "?" or "*". The list of files will be added to "lstOfFiles", without a previous
+clearing.}
+var
+  Info: TSearchRec;
+begin
+  if fileName = '' then exit;
+  //There are some name
+  if (pos('*', fileName) = 0) and (pos('?', fileName) = 0) then begin
+    //It's just a file name.
+    lstOfFiles.Add(fileName);  //No check for existence.
+    exit;
+  end;
+  //There are some wildcard chars.
+  if FindFirst(fileName, faAnyFile and faDirectory, Info)=0 then begin
+    Repeat
+      if (Info.Attr and faDirectory) = faDirectory then begin
+        //Could be "." or ".."
+      end else begin
+        lstOfFiles.Add(Info.Name);
+      end;
+    until FindNext(info)<>0;
+  end;
+  FindClose(Info);
+end;
 
 procedure WritePartFile(const buffer; bufsize: integer;
                         nblock, nblocks: byte; filName: string);
@@ -22,11 +52,12 @@ var
   strm: TStream;
   header: THeader;
 begin
+  strm := TFileStream.Create(filName, fmCreate);
   header.ID := $4243;
-
   header.nblock  := nblock;
   header.nblocks := nblocks;
-  strm := TFileStream.Create(filName, fmCreate);
+  header.filsize := strm.Size;
+  header.blksize := bufsize;
   try
     strm.Write(header, SizeOf(THeader));
     strm.Write(buffer, bufsize);
@@ -74,14 +105,104 @@ begin
     end;
   end;
 end;
+function ReadHeaderFile(fileName: string; headPtr: THeaderPtr): string;
+var
+  FileStream: TFileStream;
+begin
+  Result := '';
+  FileStream := TFileStream.Create(fileName, fmOpenRead);
+  try
+    FileStream.ReadBuffer(headPtr^, SizeOf(THeader));
+  finally
+    FreeAndNil(FileStream);
+  end;
+end;
+function ReadDataFile(fileName: string; data: Pointer; out nRead: integer): string;
+var
+  FileStream: TFileStream;
+  head: Theader;
+begin
+  Result := '';
+  FileStream := TFileStream.Create(fileName, fmOpenRead);
+  try
+    //Read information of block
+    FileStream.ReadBuffer(head, SizeOf(THeader));
+    //Read data of block
+    FileStream.ReadBuffer(data^, head.blksize);
+    nRead := head.blksize;
+  finally
+    FreeAndNil(FileStream);
+  end;
+end;
+function DoJoinFiles(partFile: string): string;
+const
+  EXTENT = '.PART';
+var
+  nPart: Longint;
+  tmp, outFile: String;
+  dotPos1, i, dotPos2, nRead: Integer;
+  header: THeader;
+  vBuffer: pointer;
+  strm: TFileStream;
+begin
+  Result := '';
+  if UpCase(ExtractFileExt(partFile)) <> EXTENT then begin
+    Result := 'Unknown file type.';
+    exit;
+  end;
+  //Is a "part" file. Get the number of part:  name.0.part
+  dotPos2 := length(partFile) - length(EXTENT) + 1;  //The last dot in the file Name
+  dotPos1 := dotPos2 - 1;
+  while (dotPos1>1) and (partFile[dotPos1]<>'.') do dec(dotPos1);
+  if dotPos1<=1 then begin
+    Result := 'Bad format in file name.';
+    exit;
+  end;
+  tmp := copy(partFile, dotPos1+1, dotpos2-dotpos1-1);  //Expected no more of 4 digits
+  if not TryStrToInt(tmp, nPart) then begin
+    Result := 'Bad format in file name.';
+    exit;
+  end;
+  //Find the part 0 of the files
+  if nPart = 0 then begin
+    //This is the number 0
+  end else begin
+    partFile := copy(partFile, 1, dotPos1) + '0.part';
+  end;
+  if not FileExists(partFile) then begin
+    Result := 'Not found: ' + partFile;
+    exit;
+  end;
+  //Extract information from part 0
+  Result := ReadHeaderFile(partFile, @header);
+  if Result<>'' then begin
+    exit;
+  end;
+  outFile := copy(partFile, 1, dotPos1) + 'zip';
+  GetMem(vBuffer, header.blksize);  //We're assuming the part0 must be the biggest size.
+  //Join the data from files
+  strm := TFileStream.Create(outFile, fmCreate);
+  try
+    for i:=0 to header.nblocks - 1 do begin
+      partFile := copy(partFile, 1, dotPos1) + IntToStr(i) + '.part';
+      if not FileExists(partFile) then begin
+        Result := 'Not found: ' + partFile;
+        exit;
+      end;
+      Result := ReadDataFile(partFile, vBuffer, nRead);
+      if Result<>'' then begin
+        exit;
+      end;
+      strm.WriteBuffer(vBuffer^, nRead);
+    end;
+  finally
+    strm.Free;
+  end;
+end;
 
 function DoSplitFile(sourceFile: string; partSize: integer): string;
 var
   strm: TFileStream;
-  vBuffer: Pointer;
-  nRead: LongInt;
-  nFiles, nbloque: integer;
-  partName: String;
 begin
   strm := TFileStream.Create(sourceFile, fmOpenRead + fmShareDenyNone);
   Result := DoSplitFile(strm, 'aaa', partSize);

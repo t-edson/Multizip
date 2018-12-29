@@ -12,8 +12,6 @@ type
   { TMyApplication }
 
   TMyApplication = class(TCustomApplication)
-  private
-    procedure ExpandFileName(fileName: string; lstOfFiles: TStringList);
   protected
     listFiles: TSTringList;
     listPars: TStringList;
@@ -23,32 +21,6 @@ type
     destructor Destroy; override;
     procedure WriteHelp; virtual;
   end;
-procedure TMyApplication.ExpandFileName(fileName: string; lstOfFiles: TStringList);
-{Expand the fileName to a list of files (in "lstOfFiles") considering the wildcard
-chars: "?" or "*". The list of files will be added to "lstOfFiles", without a previous
-clearing.}
-var
-  Info: TSearchRec;
-begin
-  if fileName = '' then exit;
-  //There are some name
-  if (pos('*', fileName) = 0) and (pos('?', fileName) = 0) then begin
-    //It's just a file name.
-    lstOfFiles.Add(fileName);  //No check for existence.
-    exit;
-  end;
-  //There are some wildcard chars.
-  if FindFirst(fileName, faAnyFile and faDirectory, Info)=0 then begin
-    Repeat
-      if (Info.Attr and faDirectory) = faDirectory then begin
-        //Could be "." or ".."
-      end else begin
-        lstOfFiles.Add(Info.Name);
-      end;
-    until FindNext(info)<>0;
-  end;
-  FindClose(Info);
-end;
 procedure TMyApplication.DoRun;
 const
   SHORT_OPTS = 'ho:s:';

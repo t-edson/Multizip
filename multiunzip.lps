@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONFIG>
+  <ProjectSession>
+    <PathDelim Value="\"/>
+    <Version Value="10"/>
+    <BuildModes Active="Release"/>
+    <Units Count="12">
+      <Unit0>
+        <Filename Value="multiunzip.pas"/>
+        <IsPartOfProject Value="True"/>
+        <IsVisibleTab Value="True"/>
+        <TopLine Value="136"/>
+        <CursorPos X="12" Y="147"/>
+        <UsageCount Value="75"/>
+        <Loaded Value="True"/>
+      </Unit0>
+      <Unit1>
+        <Filename Value="SplitFile.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="1"/>
+        <TopLine Value="218"/>
+        <CursorPos Y="257"/>
+        <UsageCount Value="69"/>
+        <Loaded Value="True"/>
+      </Unit1>
+      <Unit2>
+        <Filename Value="C:\lazarus\fpc\3.0.4\source\packages\fcl-base\src\custapp.pp"/>
+        <UnitName Value="CustApp"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="72"/>
+        <CursorPos X="14" Y="88"/>
+        <UsageCount Value="5"/>
+      </Unit2>
+      <Unit3>
+        <Filename Value="C:\lazarus\components\lazutils\fileutil.pas"/>
+        <UnitName Value="FileUtil"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="233"/>
+        <CursorPos X="11" Y="251"/>
+        <UsageCount Value="8"/>
+      </Unit3>
+      <Unit4>
+        <Filename Value="C:\lazarus\components\lazutils\fileutil.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="1013"/>
+        <CursorPos X="3" Y="1024"/>
+        <UsageCount Value="5"/>
+      </Unit4>
+      <Unit5>
+        <Filename Value="C:\lazarus\fpc\3.0.4\source\rtl\objpas\sysutils\filutilh.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="91"/>
+        <CursorPos X="3" Y="109"/>
+        <UsageCount Value="7"/>
+      </Unit5>
+      <Unit6>
+        <Filename Value="C:\lazarus\fpc\3.0.4\source\rtl\inc\systemh.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="90"/>
+        <CursorPos X="14" Y="108"/>
+        <UsageCount Value="6"/>
+      </Unit6>
+      <Unit7>
+        <Filename Value="C:\lazarus\fpc\3.0.4\source\rtl\objpas\classes\classesh.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="849"/>
+        <CursorPos X="14" Y="868"/>
+        <UsageCount Value="10"/>
+      </Unit7>
+      <Unit8>
+        <Filename Value="C:\lazarus\fpc\3.0.4\source\packages\paszlib\src\zipper.pp"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="526"/>
+        <CursorPos X="53" Y="545"/>
+        <UsageCount Value="19"/>
+      </Unit8>
+      <Unit9>
+        <Filename Value="C:\lazarus\fpc\3.0.4\source\rtl\objpas\classes\streams.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="27"/>
+        <CursorPos X="3" Y="29"/>
+        <UsageCount Value="10"/>
+      </Unit9>
+      <Unit10>
+        <Filename Value="C:\lazarus\fpc\3.0.4\source\rtl\objpas\sysutils\finah.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="9"/>
+        <CursorPos X="20" Y="22"/>
+        <UsageCount Value="9"/>
+      </Unit10>
+      <Unit11>
+        <Filename Value="C:\lazarus\fpc\3.0.4\source\packages\rtl-objpas\src\inc\strutils.pp"/>
+        <EditorIndex Value="-1"/>
+        <UsageCount Value="10"/>
+      </Unit11>
+    </Units>
+    <JumpHistory Count="20" HistoryIndex="19">
+      <Position1>
+        <Filename Value="SplitFile.pas"/>
+        <Caret Line="241" TopLine="228"/>
+      </Position1>
+      <Position2>
+        <Filename Value="SplitFile.pas"/>
+        <Caret Line="242" TopLine="228"/>
+      </Position2>
+      <Position3>
+        <Filename Value="SplitFile.pas"/>
+        <Caret Line="243" TopLine="228"/>
+      </Position3>
+      <Position4>
+        <Filename Value="SplitFile.pas"/>
+        <Caret Line="244" TopLine="228"/>
+      </Position4>
+      <Position5>
+        <Filename Value="SplitFile.pas"/>
+        <Caret Line="248" TopLine="228"/>
+      </Position5>
+      <Position6>
+        <Filename Value="SplitFile.pas"/>
+        <Caret Line="249" TopLine="228"/>
+      </Position6>
+      <Position7>
+        <Filename Value="SplitFile.pas"/>
+        <Caret Line="252" TopLine="228"/>
+      </Position7>
+      <Position8>
+        <Filename Value="SplitFile.pas"/>
+        <Caret Line="242" TopLine="228"/>
+      </Position8>
+      <Position9>
+        <Filename Value="SplitFile.pas"/>
+        <Caret Line="243" TopLine="228"/>
+      </Position9>
+      <Position10>
+        <Filename Value="SplitFile.pas"/>
+        <Caret Line="244" TopLine="228"/>
+      </Position10>
+      <Position11>
+        <Filename Value="SplitFile.pas"/>
+        <Caret Line="248" TopLine="228"/>
+      </Position11>
+      <Position12>
+        <Filename Value="SplitFile.pas"/>
+        <Caret Line="249" TopLine="228"/>
+      </Position12>
+      <Position13>
+        <Filename Value="SplitFile.pas"/>
+        <Caret Line="252" TopLine="228"/>
+      </Position13>
+      <Position14>
+        <Filename Value="SplitFile.pas"/>
+        <Caret Line="242" TopLine="228"/>
+      </Position14>
+      <Position15>
+        <Filename Value="SplitFile.pas"/>
+        <Caret Line="241" TopLine="228"/>
+      </Position15>
+      <Position16>
+        <Filename Value="SplitFile.pas"/>
+        <Caret Line="256" TopLine="228"/>
+      </Position16>
+      <Position17>
+        <Filename Value="SplitFile.pas"/>
+        <Caret Line="255" TopLine="228"/>
+      </Position17>
+      <Position18>
+        <Filename Value="SplitFile.pas"/>
+        <Caret Line="256" TopLine="228"/>
+      </Position18>
+      <Position19>
+        <Filename Value="SplitFile.pas"/>
+        <Caret Line="206" TopLine="188"/>
+      </Position19>
+      <Position20>
+        <Filename Value="SplitFile.pas"/>
+        <Caret Line="257" TopLine="218"/>
+      </Position20>
+    </JumpHistory>
+  </ProjectSession>
+  <Debugging>
+    <BreakPoints Count="1">
+      <Item1>
+        <Kind Value="bpkSource"/>
+        <WatchScope Value="wpsLocal"/>
+        <WatchKind Value="wpkWrite"/>
+        <Source Value="C:\lazarus\fpc\3.0.4\source\packages\paszlib\src\zipper.pp"/>
+        <Line Value="1792"/>
+      </Item1>
+    </BreakPoints>
+  </Debugging>
+</CONFIG>

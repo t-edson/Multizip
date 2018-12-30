@@ -5,7 +5,7 @@ uses
   Classes, SysUtils;
 type
   THeader = record
-    //id      : word;
+    id      : byte;
     nblock  : byte;
     nblocks : byte;
     filsize : DWord;  //Just informative
@@ -14,25 +14,64 @@ type
   end;
   THeaderPtr = ^Theader;
 
-procedure ExpandFileName(fileName: string; lstOfFiles: TStringList);
+procedure ExpandFileName(fileName: string; lstOfFiles: TStringList; out IsDir: boolean;
+                         out dirPath: string);
 function DoSplitFile(sourceFile: string; partSize: integer): string;
 function DoSplitFile(sourceStrm: TStream; baseName: string; partSize: integer;
                      origFileName, extent: string): string;
 function DoJoinFiles(partFile: string; out outFile: string): string;
 
 implementation
-procedure ExpandFileName(fileName: string; lstOfFiles: TStringList);
+procedure ExpandFileName(fileName: string; lstOfFiles: TStringList; out IsDir: boolean;
+                         out dirPath: string);
 {Expand the fileName to a list of files (in "lstOfFiles") considering the wildcard
 chars: "?" or "*". The list of files will be added to "lstOfFiles", without a previous
-clearing.}
+clearing.
+If the "fileName" is a directory (like c:\dirpath\dirName), the flag "IsDir" will be set
+to TRUE an the path of the directory will returned in "dirPath" (c:\dirpath).  }
+  function FindDirFiles(Dir: string; files: TStringList): Boolean;
+  // Finds every file in a given directory and its sub-directories recursively
+  // and return the list in files.
+  // Returns True on success.
+  var
+    F: TSearchRec;
+  begin
+    Result := True;
+    Dir := Dir + DirectorySeparator;
+    try
+      if FindFirst(Dir + '*.*', faAnyFile, F) = 0 then
+      repeat
+        if (F.Attr and faDirectory > 0) then begin
+          if (F.Name<>'.') and (F.Name<>'..') then
+            Result := FindDirFiles(Dir + F.Name, files);
+        end else begin
+          files.Add(Dir + F.Name);
+        end;
+        if not Result then Exit;
+      until FindNext(F) <> 0;
+    finally
+      SysUtils.FindClose(F);
+    end;
+  end;
+
 var
-  Info: TSearchRec;
+  Info   : TSearchRec;
 begin
   if fileName = '' then exit;
   //There are some name
   if (pos('*', fileName) = 0) and (pos('?', fileName) = 0) then begin
-    //It's just a file name.
-    lstOfFiles.Add(fileName);  //No check for existence.
+    //It's just a file name or folder name.
+    if DirectoryExists(fileName) then begin
+      //It's a whole directory
+      FindDirFiles(fileName, lstOfFiles);
+      IsDir := true;
+      dirPath := ExtractFileDir(fileName);
+    end else begin
+      //It's just a file
+      lstOfFiles.Add(fileName);  //No check for existence.
+      IsDir := false;
+      dirPath := '';
+    end;
     exit;
   end;
   //There are some wildcard chars.
@@ -55,6 +94,7 @@ var
   header: THeader;
 begin
   strm := TFileStream.Create(filName, fmCreate);
+  header.id := 66;
   header.nblock  := nblock;
   header.nblocks := nblocks;
   header.filsize := strm.Size;
@@ -155,8 +195,6 @@ begin
   end;
 end;
 function DoJoinFiles(partFile: string; out outFile: string): string;
-const
-  EXTENT = '.part';
 var
   nPart: Longint;
   tmp, srcName: String;
@@ -164,14 +202,12 @@ var
   header: THeader;
   vBuffer: pointer;
   strm: TFileStream;
+  extent: string = '.part';
 begin
   Result := '';
-  if UpCase(ExtractFileExt(partFile)) <> UpCase(EXTENT) then begin
-    Result := 'Unknown file type.';
-    exit;
-  end;
+  extent := ExtractFileExt(partFile);
   //Is a "part" file. Get the number of part:  name.0.part
-  dotPos2 := length(partFile) - length(EXTENT) + 1;  //The last dot in the file Name
+  dotPos2 := length(partFile) - length(extent) + 1;  //The last dot in the file Name
   dotPos1 := dotPos2 - 1;
   while (dotPos1>1) and (partFile[dotPos1]<>'.') do dec(dotPos1);
   if dotPos1<=1 then begin
@@ -187,7 +223,7 @@ begin
   if nPart = 0 then begin
     //This is the number 0
   end else begin
-    partFile := copy(partFile, 1, dotPos1) + '0' + EXTENT;
+    partFile := copy(partFile, 1, dotPos1) + '0' + extent;
   end;
   if not FileExists(partFile) then begin
     Result := 'Not found: ' + partFile;
@@ -204,7 +240,7 @@ begin
   strm := TFileStream.Create(outFile, fmCreate);
   try
     for i:=0 to header.nblocks - 1 do begin
-      partFile := copy(partFile, 1, dotPos1) + IntToStr(i) + EXTENT;
+      partFile := copy(partFile, 1, dotPos1) + IntToStr(i) + extent;
       if not FileExists(partFile) then begin
         Result := 'Not found: ' + partFile;
         exit;

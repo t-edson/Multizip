@@ -60,7 +60,7 @@ Optional parameters can be:
   -h or --help <br/>
     Print help information.
 	
-  -f <folder name> or --folder=<<fodler name>> <br/>
+  -f <folder name> or --folder=<folder name> <br/>
     Set output folder where extract compressed files. If not specified, it.
     will be used the same folder of the compressed file.
   

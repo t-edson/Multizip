@@ -26,16 +26,16 @@ Optional parameters can be:
   -s <max.size> or --size=<<max.size>> <br/>
     Split the compressed file in files of "max.size" kilobytes.
   
-  Example 1: Compress the file this.txt to this.zip
+  Example 1: Compress the file this.txt to this.zip <br/>
     multizip this.txt
   
-  Example 2: Compress the files 1.txt and 2.txt to 12.zip
+  Example 2: Compress the files 1.txt and 2.txt to 12.zip <br/>
     multizip 1.txt 2.txt -o 12.zip
   
-  Example 3: Compress all the *.txt files to text.zip
+  Example 3: Compress all the *.txt files to text.zip <br/>
     multizip *.txt -o text.zip
 
-  Example 4: Compress an split the file a.txt in parts of 10KB
+  Example 4: Compress an split the file a.txt in parts of 10KB <br/>
     multizip a.txt -s 10
   
   Compressed files will be saved as the standard name *.zip.
@@ -64,8 +64,8 @@ Optional parameters can be:
     Set output folder where extract compressed files. If not specified, it.
     will be used the same folder of the compressed file.
   
-  Example 1: Uncompress the file this.zip to this.zip
+  Example 1: Uncompress the file this.zip to this.zip <br/>
     Multiunzip this.zip
   
-  Example 2: Join the files text.0.zp, text.1.zp, ...
+  Example 2: Join the files text.0.zp, text.1.zp, ... <br/>
     Multiunzip text.0.zp

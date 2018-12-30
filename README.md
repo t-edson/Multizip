@@ -20,10 +20,10 @@ Optional parameters can be:
   -h or --help; <br/>
     Print help information.
 	
-  -o <file name> or --output=<filename> <br/>
+  -o <file name> or --output=<<filename>> <br/>
     Set output file name. If not specified, a default name will be used.
 	
-  -s <max.size> or --size=<max.size> <br/>
+  -s <max.size> or --size=<<max.size>> <br/>
     Split the compressed file in files of "max.size" kilobytes.
   
   Example 1: Compress the file this.txt to this.zip
@@ -57,10 +57,10 @@ Optional parameters can be:
   
   Optional parameters can be: 
   
-  -h or --help
+  -h or --help <br/>
     Print help information.
 	
-  -f <folder name> or --folder=<fodler name>
+  -f <folder name> or --folder=<<fodler name>> <br/>
     Set output folder where extract compressed files. If not specified, it.
     will be used the same folder of the compressed file.
   

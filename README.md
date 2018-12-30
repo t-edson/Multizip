@@ -40,8 +40,7 @@ Optional parameters can be:
   
   Compressed files will be saved as the standard name *.zip.
   
-  Compressed and splitted files will be saved as several names with a number
-  as ordinal: *.0.zp *.1.zp *.2.zp...
+  Compressed and splitted files will be saved as several names with a number as ordinal: *.0.zp *.1.zp *.2.zp...
 	
 	
 ## Multiunzip
@@ -65,7 +64,7 @@ Optional parameters can be:
     will be used the same folder of the compressed file.
   
   Example 1: Uncompress the file this.zip to this.zip <br/>
-    Multiunzip this.zip
+    multiunzip this.zip
   
   Example 2: Join the files text.0.zp, text.1.zp, ... <br/>
-    Multiunzip text.0.zp
+    multiunzip text.0.zp

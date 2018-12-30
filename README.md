@@ -17,13 +17,13 @@ The utility consists of two programs:
 
 Optional parameters can be: 
 
-  -h or --help;
+  -h or --help; <br/>
     Print help information.
 	
-  -o <file name> or --output=<filename>
+  -o <file name> or --output=<filename> <br/>
     Set output file name. If not specified, a default name will be used.
 	
-  -s <max.size> or --size=<max.size>
+  -s <max.size> or --size=<max.size> <br/>
     Split the compressed file in files of "max.size" kilobytes.
   
   Example 1: Compress the file this.txt to this.zip

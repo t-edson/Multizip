@@ -8,7 +8,7 @@ The utility consists of two programs:
 * multizip -> Command line program to compress or split files.
 * multiunzip -> Command line program to uncompress or join files.
 
-== multizip ==
+## multizip
 
   Utility to compress and split files or folders.
   
@@ -42,7 +42,7 @@ Optional parameters can be:
   as ordinal: *.0.zp *.1.zp *.2.zp...
 	
 	
-== Multiunzip ==
+## Multiunzip
 
   Utility to uncompress and join files or folders compressed or splitted
   by MULTIZIP.

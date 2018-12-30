@@ -19,8 +19,10 @@ Optional parameters can be:
 
   -h or --help;
     Print help information.
+	
   -o <file name> or --output=<filename>
     Set output file name. If not specified, a default name will be used.
+	
   -s <max.size> or --size=<max.size>
     Split the compressed file in files of "max.size" kilobytes.
   

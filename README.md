@@ -8,7 +8,7 @@ The utility consists of two programs:
 * multizip -> Command line program to compress or split files.
 * multiunzip -> Command line program to uncompress or join files.
 
-## multizip
+## Multizip
 
   Utility to compress and split files or folders.
   

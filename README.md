@@ -1,5 +1,5 @@
-Multizip
-========
+Multizip 1.0
+============
 
 Utility for compress and split files.
 

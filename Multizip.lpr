@@ -4,7 +4,8 @@ program Multizip;
 }
 uses
   Classes, SysUtils, zipper, CustApp, SplitFile;
-const VERSION = '0.0';
+const
+  {$I version.txt}
 var
   OurZipper: TZipper;
 type
@@ -95,8 +96,9 @@ begin
   OurZipper := TZipper.Create;
   try
     OurZipper.FileName := outFile;
-    for str in listFiles do
-      OurZipper.Entries.AddFileEntry(str, str);
+    for str in listFiles do begin
+      OurZipper.Entries.AddFileEntry(str, ExtractFileName(str));
+    end;
     if HasOption('s', 'size') then begin
       //Compress and split
       strSize := GetOptionValue('s', 'size');
@@ -105,12 +107,12 @@ begin
         Terminate;
         Exit;
       end;
-      //Uisng stream
+      //Using stream
       strm := TMemoryStream.Create;
       OurZipper.SaveToStream(strm);
       baseName := ExtractFileName(outFile);
       baseName := ChangeFileExt(baseName, '');
-      DoSplitFile(strm, baseName, partSize * 1024);
+      DoSplitFile(strm, baseName, partSize * 1024, ExtractFileName(outFile), '.zp');
       strm.Destroy;
       //Using a file
       //OurZipper.SaveToFile(outFile);
@@ -148,8 +150,7 @@ procedure TMyApplication.WriteHelp;
 var
   filName: string;
 begin
-  writeln('                 MULTIZIP ' + VERSION);
-  writeln('                 ===========');
+  writeln('                === MULTIZIP ' + VER_PROG + ' ===');
   writeln('By ' + 'Tito Hinostroza - 2018 - All right reserved.');
   writeln('Utility to compress and split files or folders.');
   writeln('');

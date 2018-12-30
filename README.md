@@ -59,6 +59,7 @@ Optional parameters can be:
   
   -h or --help
     Print help information.
+	
   -f <folder name> or --folder=<fodler name>
     Set output folder where extract compressed files. If not specified, it.
     will be used the same folder of the compressed file.
@@ -66,5 +67,5 @@ Optional parameters can be:
   Example 1: Uncompress the file this.zip to this.zip
     Multiunzip this.zip
   
-  Example 2: Join the files text.0.part, text.1.part, ...
-    Multiunzip text.0.part
+  Example 2: Join the files text.0.zp, text.1.zp, ...
+    Multiunzip text.0.zp
